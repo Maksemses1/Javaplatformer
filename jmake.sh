@@ -1,7 +1,4 @@
 #!/bin/bash
-
-rm -rf bin
-mkdir bin
-
-javac -d bin -sourcepath src src/JavaPlatformer/*.java
-java -cp bin JavaPlatformer.Main "$@"
+mkdir -p bin
+javac -d bin src/main/java/JavaPlatformer/*.java
+java -cp bin JavaPlatformer.Main
