@@ -13,19 +13,14 @@ public class Canvas extends JPanel implements Runnable {
   int width = 50;
   int height = 50;
 
-  double speedX = 150.0;
-  double speedY = 150.0;
+  double speedX = 300.0;
+  double speedY = 300.0;
 
-  boolean running = false;
+  boolean running = true;
 
   public Canvas() {
     this.setDoubleBuffered(true);
     this.setBackground(Color.BLACK);
-  }
-
-  public void start() {
-    running = true;
-    new Thread(this).start();
   }
 
   @Override
@@ -41,15 +36,15 @@ public class Canvas extends JPanel implements Runnable {
       repaint();
 
       try {
-        Thread.sleep(10);
+        Thread.sleep(7);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
     }
   }
 
-  // Логика обновления теперь зависит от времени
   private void update(double deltaTime) {
+    // System.out.println(deltaTime);
     x += speedX * deltaTime;
     y += speedY * deltaTime;
 
