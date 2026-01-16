@@ -11,11 +11,11 @@ class Window extends JFrame {
     setBounds(500, 100, 500, 500);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     canvas = new Canvas();
-    kInput = new KeyInput();
-    mInput = new MouseInput();
-    add(canvas);
+    kInput = new KeyInput(canvas);
+    mInput = new MouseInput(canvas);
     addKeyListener(kInput);
     addMouseListener(mInput);
+    add(canvas);
     setFocusable(true);
     setFocusableWindowState(true);
   }

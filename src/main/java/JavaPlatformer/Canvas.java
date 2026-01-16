@@ -3,22 +3,17 @@ package JavaPlatformer;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+
 import javax.swing.JPanel;
 
 public class Canvas extends JPanel implements Runnable {
-
-  double x = 0;
-  double y = 0;
-
-  int width = 50;
-  int height = 50;
-
-  double speedX = 300.0;
-  double speedY = 300.0;
-
+  Player player;
   boolean running = true;
 
   public Canvas() {
+    player = new Player();
     this.setDoubleBuffered(true);
     this.setBackground(Color.BLACK);
   }
@@ -36,7 +31,7 @@ public class Canvas extends JPanel implements Runnable {
       repaint();
 
       try {
-        Thread.sleep(7);
+        Thread.sleep(10);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
@@ -44,25 +39,24 @@ public class Canvas extends JPanel implements Runnable {
   }
 
   private void update(double deltaTime) {
-    // System.out.println(deltaTime);
-    x += speedX * deltaTime;
-    y += speedY * deltaTime;
-
-    if (x + width >= getWidth() || x < 0) {
-      speedX = -speedX;
-    }
-    if (y + height >= getHeight() || y < 0) {
-      speedY = -speedY;
-    }
   }
 
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
 
-    g.setColor(Color.RED);
-    g.fillRect((int) x, (int) y, width, height);
+    player.draw(g);
 
     Toolkit.getDefaultToolkit().sync();
   }
+
+  void keyHandler(KeyEvent e) {
+    player.sendKey(e);
+  }
+
+  void mouseHandler(MouseEvent e) {
+    System.out.println(e.getXOnScreen());
+    // TODO
+  }
+
 }
