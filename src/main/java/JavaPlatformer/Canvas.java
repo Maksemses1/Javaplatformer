@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 public class Canvas extends JPanel implements Runnable {
-  int camX;
-  int camY;
   Player player;
+  Camera camera;
   ArrayList<GameObject> gameObjects = new ArrayList<>();
   boolean running = true;
 
   public Canvas() {
     player = new Player();
+    camera = new Camera(player, this);
     gameObjects.add(new Grass(1000, 1000));
     this.setDoubleBuffered(true);
     this.setBackground(Color.BLACK);
@@ -46,11 +46,7 @@ public class Canvas extends JPanel implements Runnable {
   }
 
   private void update(double deltaTime) {
-    float targetX = player.x - getWidth() / 2;
-    float targetY = player.y - getHeight() / 2;
-
-    camX += (targetX - camX) * 0.05f;
-    camY += (targetY - camY) * 0.05f;
+    camera.update();
   }
 
   @Override
@@ -61,7 +57,7 @@ public class Canvas extends JPanel implements Runnable {
 
     AffineTransform oldTransform = g2d.getTransform();
 
-    g.translate(-camX, -camY);
+    g.translate(-camera.x, -camera.y);
     for (GameObject obj : gameObjects) {
       obj.draw(g2d);
     }
