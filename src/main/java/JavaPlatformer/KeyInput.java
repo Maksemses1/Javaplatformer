@@ -10,7 +10,13 @@ class KeyInput extends KeyAdapter {
     canvas = c;
   }
 
+  @Override
   public void keyPressed(KeyEvent e) {
-    canvas.keyHandler(e);
+    canvas.keyPress(e);
+  }
+
+  @Override
+  public void keyReleased(KeyEvent e) {
+    canvas.keyReleas(e);
   }
 }

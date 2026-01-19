@@ -8,6 +8,11 @@ class Player extends GameObject {
   final int width = 20;
   final int height = 60;
 
+  boolean keyW = false;
+  boolean keyA = false;
+  boolean keyS = false;
+  boolean keyD = false;
+
   Player() {
     x = 0;
     y = 0;
@@ -21,16 +26,27 @@ class Player extends GameObject {
     g.setColor(prevColor);
   }
 
-  void sendKey(KeyEvent e) {
+  void update() {
+    x += (keyA ? -1 : (keyD ? 1 : 0)) * 300 * Canvas.deltaTime;
+  }
+
+  void sendKeyPress(KeyEvent e) {
     int key = e.getKeyCode();
-    if (key == 87) { // W
-      y -= 20;
-    } else if (key == 65) {
-      x -= 20;
-    } else if (key == 83) {
-      y += 20;
+    // AD
+    if (key == 65) {
+      keyA = true;
     } else if (key == 68) {
-      x += 20;
+      keyD = true;
+    }
+  }
+
+  void sendKeyReleas(KeyEvent e) {
+    int key = e.getKeyCode();
+    // AD
+    if (key == 65) {
+      keyA = false;
+    } else if (key == 68) {
+      keyD = false;
     }
   }
 }

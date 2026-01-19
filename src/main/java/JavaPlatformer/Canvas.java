@@ -15,7 +15,9 @@ public class Canvas extends JPanel implements Runnable {
   Player player;
   Camera camera;
   ArrayList<GameObject> gameObjects = new ArrayList<>();
+
   boolean running = true;
+  static double deltaTime;
 
   public Canvas() {
     player = new Player();
@@ -31,10 +33,10 @@ public class Canvas extends JPanel implements Runnable {
 
     while (running) {
       long now = System.nanoTime();
-      double deltaTime = (now - lastTime) / 1_000_000_000.0;
+      deltaTime = (now - lastTime) / 1_000_000_000.0;
       lastTime = now;
 
-      update(deltaTime);
+      update();
       repaint();
 
       try {
@@ -45,7 +47,8 @@ public class Canvas extends JPanel implements Runnable {
     }
   }
 
-  private void update(double deltaTime) {
+  private void update() {
+    player.update();
     camera.update();
   }
 
@@ -66,18 +69,19 @@ public class Canvas extends JPanel implements Runnable {
 
     g2d.setTransform(oldTransform);
 
-    // TODO
-
     Toolkit.getDefaultToolkit().sync();
   }
 
-  void keyHandler(KeyEvent e) {
-    player.sendKey(e);
+  void keyPress(KeyEvent e) {
+    player.sendKeyPress(e);
+  }
+
+  void keyReleas(KeyEvent e) {
+    player.sendKeyReleas(e);
   }
 
   void mouseHandler(MouseEvent e) {
     System.out.println(e.getXOnScreen());
-    // TODO
   }
 
 }
