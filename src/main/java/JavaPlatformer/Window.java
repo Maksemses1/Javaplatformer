@@ -8,7 +8,7 @@ class Window extends JFrame {
   MouseInput mInput;
 
   Window() {
-    setBounds(500, 100, 500, 500);
+    setBounds(500, 100, 1000, 900);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     canvas = new Canvas();
     kInput = new KeyInput(canvas);

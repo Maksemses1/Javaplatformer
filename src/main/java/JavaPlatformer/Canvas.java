@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 public class Canvas extends JPanel implements Runnable {
   Player player;
   Camera camera;
-  ArrayList<GameObject> gameObjects = new ArrayList<>();
+  static ArrayList<GameObject> gameObjects = new ArrayList<>();
 
   boolean running = true;
   static double deltaTime;
@@ -22,7 +22,7 @@ public class Canvas extends JPanel implements Runnable {
   public Canvas() {
     player = new Player();
     camera = new Camera(player, this);
-    gameObjects.add(new Grass(1000, 1000));
+    gameObjects.add(new Grass(-20, 800, 1000, 100));
     this.setDoubleBuffered(true);
     this.setBackground(Color.BLACK);
   }
