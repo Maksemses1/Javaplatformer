@@ -20,4 +20,8 @@ class HUDElement extends GameObject {
     g.setFont(new Font("TimesRoman", Font.PLAIN, 30));
     g.drawString(value, x, y);
   }
+
+  public void setValue(String value) {
+    this.value = value;
+  }
 }

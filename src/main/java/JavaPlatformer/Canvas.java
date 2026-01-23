@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 public class Canvas extends JPanel implements Runnable {
   Player player;
   Camera camera;
-  HUD hud;
 
   static ArrayList<GameObject> gameObjects = new ArrayList<>();
 
@@ -24,8 +23,8 @@ public class Canvas extends JPanel implements Runnable {
   public Canvas() {
     player = new Player();
     camera = new Camera(player, this);
-    hud = new HUD();
     gameObjects.add(new Grass(-20, 800, 1000, 100));
+    gameObjects.add(new Coin(90, 710));
     this.setDoubleBuffered(true);
     this.setBackground(Color.BLACK);
   }
@@ -69,11 +68,8 @@ public class Canvas extends JPanel implements Runnable {
     }
 
     player.draw(g2d);
-
     g2d.setTransform(oldTransform);
-
-    hud.draw(g);
-
+    player.hud.draw(g2d);
     Toolkit.getDefaultToolkit().sync();
   }
 

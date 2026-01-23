@@ -11,6 +11,10 @@ class Player extends GameObject {
   boolean keyS = false;
   boolean keyD = false;
 
+  int coins = 0;
+
+  HUD hud;
+
   int jumpImpulse = 0;
 
   Player() {
@@ -18,7 +22,8 @@ class Player extends GameObject {
     y = 0;
     width = 20;
     height = 60;
-    isCollide = true;
+    hud = new HUD();
+    hud.setCoins(coins);
   }
 
   @Override
@@ -45,20 +50,41 @@ class Player extends GameObject {
 
   void gravity() {
     int potentialY = (int) (y + (300 * Canvas.deltaTime));
-    boolean down = true;
-    for (GameObject obj : Canvas.gameObjects) {
-      if (obj.isCollide)
-        if ((x >= obj.x - width && x <= obj.x + obj.width)
-            &&
-            potentialY + height > obj.y && y < obj.y) {
-          down = false;
-          break;
-        }
-    }
-    if (down)
-      y = potentialY;
-    else
+
+    GameObject platform = checkCollision("platform");
+    if (platform != null) {
+      y = platform.y - height;
       canJump = true;
+    } else {
+      y = potentialY;
+      canJump = false;
+    }
+
+    GameObject coin = checkCollision("coin");
+
+    if (coin != null) {
+      Canvas.gameObjects.remove(coin);
+      hud.setCoins(++coins);
+    }
+  }
+
+  GameObject checkCollision(String colliderTag) {
+    int potentialY = (int) (y + (300 * Canvas.deltaTime));
+    for (GameObject obj : Canvas.gameObjects) {
+      if (obj == this)
+        continue;
+
+      if (obj.colliders.contains(colliderTag)) {
+
+        boolean horizontalOverlap = (x >= obj.x - width && x <= obj.x + obj.width);
+        boolean verticalOverlap = (potentialY + height > obj.y && y < obj.y);
+
+        if (horizontalOverlap && verticalOverlap) {
+          return obj;
+        }
+      }
+    }
+    return null;
   }
 
   void sendKeyPress(KeyEvent e) {

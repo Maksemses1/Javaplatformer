@@ -6,9 +6,10 @@ import java.util.ArrayList;
 class HUD {
 
   ArrayList<HUDElement> elements = new ArrayList<>();
+  HUDElement coins;
 
   HUD() {
-    HUDElement coins = new HUDElement(50, 50, "Coins: 0");
+    coins = new HUDElement(50, 50, "Coins: 0");
     elements.add(coins);
   }
 
@@ -16,5 +17,9 @@ class HUD {
     for (HUDElement element : elements) {
       element.draw(g);
     }
+  }
+
+  void setCoins(int coins) {
+    this.coins.setValue("Coins: " + coins);
   }
 }

@@ -11,7 +11,7 @@ class Grass extends GameObject {
     this.y = y;
     this.height = height;
     this.width = width;
-    isCollide = true;
+    colliders.add("platform");
   }
 
   public void draw(Graphics g) {
