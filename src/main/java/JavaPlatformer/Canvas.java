@@ -2,29 +2,23 @@ package JavaPlatformer;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
 public class Canvas extends JPanel implements Runnable {
   Player player;
   Camera camera;
+  Scene currentScene;
 
-  static ArrayList<GameObject> gameObjects = new ArrayList<>();
-
-  boolean running = true;
   static double deltaTime;
 
   public Canvas() {
     player = new Player();
     camera = new Camera(player, this);
-    gameObjects.add(new Grass(-20, 800, 1000, 100));
-    gameObjects.add(new Coin(90, 710));
+    currentScene = new Level1(player, camera);
     this.setDoubleBuffered(true);
     this.setBackground(Color.BLACK);
   }
@@ -33,7 +27,7 @@ public class Canvas extends JPanel implements Runnable {
   public void run() {
     long lastTime = System.nanoTime();
 
-    while (running) {
+    while (true) {
       long now = System.nanoTime();
       deltaTime = (now - lastTime) / 1_000_000_000.0;
       lastTime = now;
@@ -58,18 +52,9 @@ public class Canvas extends JPanel implements Runnable {
   protected void paintComponent(Graphics g) {
 
     super.paintComponent(g);
-    Graphics2D g2d = (Graphics2D) g;
 
-    AffineTransform oldTransform = g2d.getTransform();
+    currentScene.draw(g);
 
-    g.translate(-camera.x, -camera.y);
-    for (GameObject obj : gameObjects) {
-      obj.draw(g2d);
-    }
-
-    player.draw(g2d);
-    g2d.setTransform(oldTransform);
-    player.hud.draw(g2d);
     Toolkit.getDefaultToolkit().sync();
   }
 

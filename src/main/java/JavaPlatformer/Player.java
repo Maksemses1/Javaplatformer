@@ -11,6 +11,8 @@ class Player extends GameObject {
   boolean keyS = false;
   boolean keyD = false;
 
+  Scene scene;
+
   int coins = 0;
 
   HUD hud;
@@ -63,18 +65,18 @@ class Player extends GameObject {
     GameObject coin = checkCollision("coin");
 
     if (coin != null) {
-      Canvas.gameObjects.remove(coin);
+      scene.removeObject(coin);
       hud.setCoins(++coins);
     }
   }
 
   GameObject checkCollision(String colliderTag) {
     int potentialY = (int) (y + (300 * Canvas.deltaTime));
-    for (GameObject obj : Canvas.gameObjects) {
+    for (GameObject obj : scene.getGameObjectList()) {
       if (obj == this)
         continue;
 
-      if (obj.colliders.contains(colliderTag)) {
+      if (obj.hasTag(colliderTag)) {
 
         boolean horizontalOverlap = (x >= obj.x - width && x <= obj.x + obj.width);
         boolean verticalOverlap = (potentialY + height > obj.y && y < obj.y);
@@ -109,5 +111,9 @@ class Player extends GameObject {
     } else if (key == 68) {
       keyD = false;
     }
+  }
+
+  void setScene(Scene scene) {
+    this.scene = scene;
   }
 }
