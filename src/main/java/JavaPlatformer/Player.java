@@ -3,6 +3,9 @@ package JavaPlatformer;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.List;
 
 class Player extends GameObject {
   boolean canJump = false;
@@ -11,9 +14,11 @@ class Player extends GameObject {
   boolean keyS = false;
   boolean keyD = false;
 
+  ArrayList<CollidePOJO> touchedColliders;
+
   Scene scene;
 
-  int coins = 0;
+  int coinsValue = 0;
 
   HUD hud;
 
@@ -25,7 +30,7 @@ class Player extends GameObject {
     width = 20;
     height = 60;
     hud = new HUD();
-    hud.setCoins(coins);
+    hud.setCoins(coinsValue);
   }
 
   @Override
@@ -37,12 +42,20 @@ class Player extends GameObject {
   }
 
   void update() {
-    x += (keyA ? -1 : (keyD ? 1 : 0)) * 300 * Canvas.deltaTime;
+    checkColliders();
     gravity();
     jump();
+    move();
+    onCollide();
   }
 
   void jump() {
+    List<CollidePOJO> platforms = filterColliders("platform");
+    for (CollidePOJO platform : platforms) {
+      if (platform.side == "bottom") {
+        jumpImpulse = 0;
+      }
+    }
     if (jumpImpulse > 0) {
       jumpImpulse -= 5;
       canJump = false;
@@ -50,43 +63,72 @@ class Player extends GameObject {
     y = (int) (y - (jumpImpulse * Canvas.deltaTime));
   }
 
+  int i = 0;
+
   void gravity() {
     int potentialY = (int) (y + (300 * Canvas.deltaTime));
-
-    GameObject platform = checkCollision("platform");
-    if (platform != null) {
-      y = platform.y - height;
+    boolean down = true;
+    List<CollidePOJO> platforms = filterColliders("platform");
+    for (CollidePOJO platform : platforms) {
+      if (platform.side == "top") {
+        down = false;
+        break;
+      }
+    }
+    if (!down) {
       canJump = true;
     } else {
       y = potentialY;
       canJump = false;
     }
+  }
 
-    GameObject coin = checkCollision("coin");
+  void move() {
+    int potentialX = (int) (x + ((keyA ? -1 : (keyD ? 1 : 0)) * 300 * Canvas.deltaTime));
 
-    if (coin != null) {
-      scene.removeObject(coin);
-      hud.setCoins(++coins);
+    x = potentialX;
+
+  }
+
+  void onCollide() {
+    List<CollidePOJO> coins = filterColliders("coin");
+    if (coins != null) {
+      for (CollidePOJO collidePOJO : coins) {
+
+        scene.removeObject(collidePOJO.gameObject);
+        hud.setCoins(++coinsValue);
+      }
     }
   }
 
-  GameObject checkCollision(String colliderTag) {
+  void checkColliders() {
+    touchedColliders = new ArrayList<>();
     int potentialY = (int) (y + (300 * Canvas.deltaTime));
     for (GameObject obj : scene.getGameObjectList()) {
       if (obj == this)
         continue;
 
-      if (obj.hasTag(colliderTag)) {
+      boolean horizontalOverlap = (x >= obj.x - width && x <= obj.x + obj.width);
+      boolean verticalOverlap = (potentialY + height > obj.y && y < obj.y + obj.height);
 
-        boolean horizontalOverlap = (x >= obj.x - width && x <= obj.x + obj.width);
-        boolean verticalOverlap = (potentialY + height > obj.y && y < obj.y + obj.height);
-
-        if (horizontalOverlap && verticalOverlap) {
-          return obj;
+      if (horizontalOverlap && verticalOverlap) {
+        if (Math.abs(obj.y - (potentialY + height)) <= 3) {
+          touchedColliders.add(new CollidePOJO(obj, "top"));
         }
+        if (Math.abs(y - (obj.y + obj.height)) <= 3) {
+          touchedColliders.add(new CollidePOJO(obj, "bottom"));
+        }
+        touchedColliders.add(new CollidePOJO(obj, ""));
       }
     }
-    return null;
+  }
+
+  List<CollidePOJO> filterColliders(String tag) {
+    return touchedColliders
+        .stream()
+        .filter(obj -> obj.gameObject.hasTag(tag))
+        .collect(Collectors.toList());
+
   }
 
   void sendKeyPress(KeyEvent e) {
