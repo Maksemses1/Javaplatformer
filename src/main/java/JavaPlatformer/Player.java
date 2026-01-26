@@ -79,7 +79,7 @@ class Player extends GameObject {
       if (obj.hasTag(colliderTag)) {
 
         boolean horizontalOverlap = (x >= obj.x - width && x <= obj.x + obj.width);
-        boolean verticalOverlap = (potentialY + height > obj.y && y < obj.y);
+        boolean verticalOverlap = (potentialY + height > obj.y && y < obj.y + obj.height);
 
         if (horizontalOverlap && verticalOverlap) {
           return obj;
