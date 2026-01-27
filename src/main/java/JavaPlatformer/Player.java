@@ -86,7 +86,16 @@ class Player extends GameObject {
   void move() {
     int potentialX = (int) (x + ((keyA ? -1 : (keyD ? 1 : 0)) * 300 * Canvas.deltaTime));
 
-    x = potentialX;
+    List<CollidePOJO> platforms = filterColliders("platform");
+    for (CollidePOJO platform : platforms) {
+      if (!((platform.side == "left" && potentialX >= x)
+          || (platform.side == "right" && potentialX <= x))) {
+        x = potentialX;
+        break;
+      }
+    }
+    if (platforms.isEmpty())
+      x = potentialX;
 
   }
 
@@ -104,6 +113,7 @@ class Player extends GameObject {
   void checkColliders() {
     touchedColliders = new ArrayList<>();
     int potentialY = (int) (y + (300 * Canvas.deltaTime));
+    int potentialX = (int) (x + ((keyA ? -1 : (keyD ? 1 : 0)) * 300 * Canvas.deltaTime));
     for (GameObject obj : scene.getGameObjectList()) {
       if (obj == this)
         continue;
@@ -112,13 +122,19 @@ class Player extends GameObject {
       boolean verticalOverlap = (potentialY + height > obj.y && y < obj.y + obj.height);
 
       if (horizontalOverlap && verticalOverlap) {
-        if (Math.abs(obj.y - (potentialY + height)) <= 4) {
+        if (Math.abs(obj.y - (potentialY + height)) <= 10) {
           touchedColliders.add(new CollidePOJO(obj, "top"));
         }
-        if (Math.abs(y - (obj.y + obj.height)) <= 4) {
+        if (Math.abs(y - (obj.y + obj.height)) <= 10) {
           touchedColliders.add(new CollidePOJO(obj, "bottom"));
         }
-        touchedColliders.add(new CollidePOJO(obj, ""));
+        if (Math.abs(obj.x - (potentialX + width)) <= 10) {
+          touchedColliders.add(new CollidePOJO(obj, "left"));
+        }
+        System.out.println(Math.abs((obj.x + obj.width) - x));
+        if (Math.abs((obj.x + obj.width) - x) <= 10) {
+          touchedColliders.add(new CollidePOJO(obj, "right"));
+        }
       }
     }
   }
