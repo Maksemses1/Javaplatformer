@@ -14,7 +14,7 @@ class Player extends GameObject {
   boolean keyS = false;
   boolean keyD = false;
 
-  ArrayList<CollidePOJO> touchedColliders;
+  List<CollidePOJO> touchedColliders;
 
   Scene scene;
 
@@ -112,10 +112,10 @@ class Player extends GameObject {
       boolean verticalOverlap = (potentialY + height > obj.y && y < obj.y + obj.height);
 
       if (horizontalOverlap && verticalOverlap) {
-        if (Math.abs(obj.y - (potentialY + height)) <= 3) {
+        if (Math.abs(obj.y - (potentialY + height)) <= 4) {
           touchedColliders.add(new CollidePOJO(obj, "top"));
         }
-        if (Math.abs(y - (obj.y + obj.height)) <= 3) {
+        if (Math.abs(y - (obj.y + obj.height)) <= 4) {
           touchedColliders.add(new CollidePOJO(obj, "bottom"));
         }
         touchedColliders.add(new CollidePOJO(obj, ""));
