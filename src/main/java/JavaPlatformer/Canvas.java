@@ -44,6 +44,7 @@ public class Canvas extends JPanel implements Runnable {
   }
 
   private void update() {
+    currentScene.update();
     player.update();
     camera.update();
   }

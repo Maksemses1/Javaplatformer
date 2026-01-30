@@ -13,7 +13,9 @@ abstract class GameObject {
     return colliders.contains(str);
   }
 
+  void update() {
+  };
+
   void draw(Graphics g) {
-    g.drawRect(x, y, 0, 0);
-  }
+  };
 }

@@ -23,6 +23,12 @@ abstract class Scene {
     return gameObjects;
   }
 
+  void update() {
+    for (GameObject obj : gameObjects) {
+      obj.update();
+    }
+  }
+
   void draw(Graphics g) {
     Graphics2D g2d = (Graphics2D) g;
 

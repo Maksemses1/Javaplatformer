@@ -88,10 +88,12 @@ class Player extends GameObject {
 
     List<CollidePOJO> platforms = filterColliders("platform");
     for (CollidePOJO platform : platforms) {
-      if (!((platform.side == "left" && potentialX >= x)
-          || (platform.side == "right" && potentialX <= x))) {
+      if (platform.side == "left" && potentialX >= x) {
+        x = platform.gameObject.x - width;
+      } else if (platform.side == "right" && potentialX <= x) {
+        x = platform.gameObject.x + platform.gameObject.width;
+      } else {
         x = potentialX;
-        break;
       }
     }
     if (platforms.isEmpty())

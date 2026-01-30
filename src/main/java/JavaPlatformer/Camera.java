@@ -18,4 +18,5 @@ class Camera extends GameObject {
     x += (targetX - x) * 0.05f;
     y += (targetY - y) * 0.05f;
   }
+
 }
