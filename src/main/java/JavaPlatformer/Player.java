@@ -135,7 +135,7 @@ class Player extends GameObject {
         if (top <= bottom && top <= left && top <= right)
           touchedColliders.add(new CollidePOJO(obj, "top"));
         else if (bottom <= top && bottom <= left && bottom <= right)
-          touchedColliders.add(new CollidePOJO(obj, "botton"));
+          touchedColliders.add(new CollidePOJO(obj, "bottom"));
         else if (left <= bottom && left <= top && left <= right)
           touchedColliders.add(new CollidePOJO(obj, "left"));
         else if (right <= bottom && right <= left && right <= top)
