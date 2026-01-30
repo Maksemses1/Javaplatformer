@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.List;
 
@@ -71,6 +73,7 @@ class Player extends GameObject {
     List<CollidePOJO> platforms = filterColliders("platform");
     for (CollidePOJO platform : platforms) {
       if (platform.side == "top") {
+        y = platform.gameObject.y - height;
         down = false;
         break;
       }
@@ -123,20 +126,20 @@ class Player extends GameObject {
       boolean horizontalOverlap = (x >= obj.x - width && x <= obj.x + obj.width);
       boolean verticalOverlap = (potentialY + height > obj.y && y < obj.y + obj.height);
 
+      int top = Math.abs(obj.y - (potentialY + height));
+      int bottom = Math.abs(y - (obj.y + obj.height));
+      int left = Math.abs(obj.x - (potentialX + width));
+      int right = Math.abs((obj.x + obj.width) - x);
+
       if (horizontalOverlap && verticalOverlap) {
-        if (Math.abs(obj.y - (potentialY + height)) <= 10) {
+        if (top <= bottom && top <= left && top <= right)
           touchedColliders.add(new CollidePOJO(obj, "top"));
-        }
-        if (Math.abs(y - (obj.y + obj.height)) <= 10) {
-          touchedColliders.add(new CollidePOJO(obj, "bottom"));
-        }
-        if (Math.abs(obj.x - (potentialX + width)) <= 10) {
+        else if (bottom <= top && bottom <= left && bottom <= right)
+          touchedColliders.add(new CollidePOJO(obj, "botton"));
+        else if (left <= bottom && left <= top && left <= right)
           touchedColliders.add(new CollidePOJO(obj, "left"));
-        }
-        System.out.println(Math.abs((obj.x + obj.width) - x));
-        if (Math.abs((obj.x + obj.width) - x) <= 10) {
+        else if (right <= bottom && right <= left && right <= top)
           touchedColliders.add(new CollidePOJO(obj, "right"));
-        }
       }
     }
   }
