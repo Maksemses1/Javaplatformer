@@ -1,13 +1,24 @@
 package JavaPlatformer;
 
+import java.io.Console;
+
 class Level1 extends Scene {
   Level1(Player player, Camera camera) {
     super(player, camera);
     gameObjects.add(new Grass(-20, 400, 500, 50));
+    gameObjects.add(new GameObject());
+    gameObjects.add(new Grass(300, 300, 100, 50) {
+      int move = 0;
+      boolean right = true;
+      int startX = x;
 
-    gameObjects.add(new Grass(30, 200, 100, 50) {
       void update() {
-        x++;
+        if (right)
+          x = startX + move++;
+        else
+          x = startX + move--;
+        if (move == 100 || move == 0)
+          right = !right;
       }
     });
 
